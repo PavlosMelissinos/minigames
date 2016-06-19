@@ -26,7 +26,7 @@ def player_move():
     move = 0
     valid_moves = range(1, board_size + 1)
     while move not in [str(m) for m in valid_moves]:
-        move = raw_input("Move must be a number in" + str(valid_moves) + ". Enter your move - ")
+        move = raw_input("What's your next move? (1-"+ str(board_size) + ") - ")
     return move
 
 def free_spaces(board):
@@ -48,12 +48,28 @@ def computer_move(token, other_token):
         if game_over(board_copy):
             return move
 
-    center = [5]
+    center = 5
     corners = [1,3,7,9]
     random.shuffle(corners)
     rest = [2,4,6,8]
     random.shuffle(rest)
-    policy = center + corners + rest # first center, then corners, then rest
+
+    if len(fs) == board_size:
+        random.shuffle(corners)
+        return corners[0]
+    if center in fs:
+        return center
+    
+    if (1 not in fs and 9 not in fs) or (3 not in fs and 7 not in fs):
+        for move in rest:
+            if move in fs:
+                return move
+
+    for move in corners:
+        if move in fs:
+            return move
+
+    policy = [center] + corners + rest
     for move in policy:
         if move in fs:
             return move
@@ -97,8 +113,10 @@ while True:
     draw_board()
     i = 0
     while True:
+        player_id = i % players
         turn = player_types[i % len(player_types)]
         token = tokens[i % len(tokens)]
+        print 'Now playing: Player ' + str(player_id + 1) + ' (' + turn + ')'
         if turn == 'human':
             move = player_move()
             board = place(board, move, token)
@@ -109,10 +127,13 @@ while True:
             print 'Board state after computer play:\n'
             draw_board()
         if game_over(board):
+            print 'Final state'
             draw_board()
             print turn.upper(), 'WON!'
             break
         elif free_spaces(board) == []:
+            print 'Final state'
+            draw_board()
             print 'DRAW!'
             break
         i += 1
