@@ -51,8 +51,8 @@ def computer_move(token, other_token):
     center = 5
     corners = [1,3,7,9]
     random.shuffle(corners)
-    rest = [2,4,6,8]
-    random.shuffle(rest)
+    middles = [2,4,6,8]
+    random.shuffle(middles)
 
     if len(fs) == board_size:
         random.shuffle(corners)
@@ -61,7 +61,7 @@ def computer_move(token, other_token):
         return center
     
     if (1 not in fs and 9 not in fs) or (3 not in fs and 7 not in fs):
-        for move in rest:
+        for move in middles:
             if move in fs:
                 return move
 
@@ -69,7 +69,7 @@ def computer_move(token, other_token):
         if move in fs:
             return move
 
-    policy = [center] + corners + rest
+    policy = [center] + corners + middles
     for move in policy:
         if move in fs:
             return move
@@ -88,14 +88,14 @@ def game_over(b):
     b7 = b[6]
     b8 = b[7]
     b9 = b[8]
-    r1 = b1 == b2 and b2 == b3 and b1 != '-'
-    r2 = b4 == b5 and b5 == b6 and b4 != '-'
-    r3 = b7 == b8 and b8 == b9 and b7 != '-'
-    c1 = b1 == b4 and b4 == b7 and b1 != '-'
-    c2 = b2 == b5 and b5 == b8 and b2 != '-'
-    c3 = b3 == b6 and b6 == b9 and b3 != '-'
-    d1 = b1 == b5 and b5 == b9 and b1 != '-'
-    d2 = b3 == b5 and b5 == b7 and b3 != '-'
+    r1 = b1 == b2 == b3 != '-'
+    r2 = b4 == b5 == b6 != '-'
+    r3 = b7 == b8 == b9 != '-'
+    c1 = b1 == b4 == b7 != '-'
+    c2 = b2 == b5 == b8 != '-'
+    c3 = b3 == b6 == b9 != '-'
+    d1 = b1 == b5 == b9 != '-'
+    d2 = b3 == b5 == b7 != '-'
     return r1 or r2 or r3 or c1 or c2 or c3 or d1 or d2
 
 #player_types = ['human', 'computer']
