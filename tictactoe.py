@@ -1,4 +1,4 @@
-import itertools, random
+import itertools, random, time, getpass
 
 board_width = 3
 board_height = 3
@@ -6,7 +6,6 @@ board_size = board_width * board_height
 
 default_token = '-'
 tokens = ['X', 'O']
-players = ['player', 'computer']
 
 def blank_board():
     board = [default_token for i in range(board_size)]
@@ -22,9 +21,9 @@ def place(board, i, token):
     board[i] = token
     return board
 
-def player_move():
+def player_move(board):
     move = 0
-    valid_moves = range(1, board_size + 1)
+    valid_moves = free_spaces(board)
     while move not in [str(m) for m in valid_moves]:
         move = raw_input("What's your next move? (1-"+ str(board_size) + ") - ")
     return move
@@ -98,12 +97,23 @@ def game_over(b):
     d2 = b3 == b5 == b7 != '-'
     return r1 or r2 or r3 or c1 or c2 or c3 or d1 or d2
 
-#player_types = ['human', 'computer']
-#player_types = ['computer', 'computer']
+player_types = ['human', 'computer', 'ai']
 
 def get_player_type(i):
-    answer = raw_input('Is player ' + i + ' a computer? ([yes]/no) - ')
-    return 'human' if answer == 'no' else 'computer'
+    answer = raw_input('Player ' + i + ' type: ([0]-human/1-computer/2-ai) - ')
+    ptype = int(answer) if answer and int(answer) in range(len(player_types)) else 0
+    if answer == '2':
+        print 'Creating a superintelligence just for you. Please wait...'
+        time.sleep(5)
+        print 'Almost ready...'
+        time.sleep(2)
+        print 'AI loading complete.'
+        time.sleep(1)
+        print 'Preparing a greeting...'
+        time.sleep(2)
+        print 'Hello, ' + getpass.getuser() + '!'
+        ptype = 1
+    return player_types[ptype]
 
 players = 2
 
@@ -118,7 +128,7 @@ while True:
         token = tokens[i % len(tokens)]
         print 'Now playing: Player ' + str(player_id + 1) + ' (' + turn + ')'
         if turn == 'human':
-            move = player_move()
+            move = player_move(board)
             board = place(board, move, token)
             draw_board()
         else:
