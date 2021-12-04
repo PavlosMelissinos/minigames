@@ -1,0 +1,11 @@
+{:paths   ["src"
+           "resources"]
+ :deps    {org.clojure/clojure {:mvn/version "1.10.0"}
+           expound             {:mvn/version "0.7.2"}}
+ :aliases {:dev     {:extra-paths ["dev"
+                                   "test"
+                                   "test-resources"]
+                     :extra-deps  {org.clojure/tools.namespace {:mvn/version "0.2.11"}
+                                   lambdaisland/kaocha         {:mvn/version "0.0-418"}
+                                   rewrite-clj                 {:mvn/version "0.6.1"}}}
+           :run {:main-opts ["-m" "battleship.main"]}}}
